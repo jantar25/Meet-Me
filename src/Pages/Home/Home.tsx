@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import Ipage from '../../Interfaces/page'
-import {PeopleData} from '../../Components/dummyData'
 import TinderCards from "react-tinder-card"
 import firebaseApp from '../../firebase/firebase'
+import SwipeButtons from '../../Components/Buttons/SwipeButtons'
 
 const Home:React.FunctionComponent<Ipage> = () => {
 
@@ -15,16 +15,17 @@ const Home:React.FunctionComponent<Ipage> = () => {
 
   return (
     <div>
-      <div className='flex justify-center mt-8'>
+      <div className='flex justify-center my-4'>
         {peoples.map((people)=>(
           <TinderCards key={people.name} className='swipe absolute' preventSwipe={['up','down']}>
             <div style={{backgroundImage:`url(${people.url})`}} 
-            className='relative w-[600px] max-w-[85vw] h-[50vh] p-8 rounded-lg bg-center bg-cover shadow-2xl'>
+            className='relative w-[600px] max-w-[80vw] h-[70vh] p-8 rounded-lg bg-center bg-cover shadow-2xl'>
               <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[600]'>{people.name}</h2>
             </div>
           </TinderCards>
         ))}
       </div>
+      <SwipeButtons />
     </div>
   )
 }
