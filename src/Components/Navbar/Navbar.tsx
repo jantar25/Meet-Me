@@ -8,7 +8,7 @@ const wemeet = require("../../images/we meet.png")
 const Navbar = () => {
   return (
     <div>
-        <div className='flex text-2xl justify-between items-center p-4 md:p-8'>
+        <div className='flex text-2xl justify-between items-center p-4 md:p-8 max-w-[85vw]'>
             <Link to="/profile"><FaUserAlt style={{cursor:'pointer'}} /></Link>
             <div className='w-[80px]'>
                 <Link to="/">
