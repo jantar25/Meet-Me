@@ -2,6 +2,7 @@ import Iroute from "../Interfaces/route";
 import Chats from "../Pages/Chats/Chats";
 import Home from "../Pages/Home/Home";
 import Profile from "../Pages/Profile/Profile";
+import IndividualChat from "../Pages/Individual_Chat/IndividualChat";
 
 
 const routes: Iroute[] =[
@@ -22,7 +23,14 @@ const routes: Iroute[] =[
         name:'Profile Page',
         component: Profile,
         exact:true
+    },
+    {
+        path:'/chats/:person',
+        name:'Individual chat Page',
+        component: IndividualChat,
+        exact:true
     }
+
 ]
 
 export default routes;
