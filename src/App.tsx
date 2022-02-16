@@ -1,13 +1,11 @@
 import React from 'react';
 import {BrowserRouter as Router,Route, Switch,RouteComponentProps } from "react-router-dom";
-import Navbar from './Components/Navbar/Navbar';
 import routes from './config/routes';
 
 const App:React.FunctionComponent<{}> = () => {
   return (
     <div className="text-pink-500">
       <Router >
-        <Navbar />
         <Switch>
             {routes.map((route,index)=>{
               return(
