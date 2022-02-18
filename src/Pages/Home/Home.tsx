@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import Ipage from '../../Interfaces/page'
 import TinderCards from "react-tinder-card"
-import firebaseApp from '../../firebase/firebase'
+// import firebaseApp from '../../firebase/firebase'
 import SwipeButtons from '../../Components/Buttons/SwipeButtons'
 import Navbar from '../../Components/Navbar/Navbar'
 
@@ -9,10 +9,10 @@ const Home:React.FunctionComponent<Ipage> = () => {
 
   const [peoples,setPeoples] = useState<any[]>([]);
   
-  const database = firebaseApp.firestore();
-  useEffect(() => {
-    database.collection('People').onSnapshot((snapshot:any) =>(setPeoples(snapshot.docs.map((doc:any) => doc.data()))))
-  },[])
+  // const database = firebaseApp.firestore();
+  // useEffect(() => {
+  //   database.collection('People').onSnapshot((snapshot:any) =>(setPeoples(snapshot.docs.map((doc:any) => doc.data()))))
+  // },[])
 
   return (
     <div>
