@@ -4,7 +4,7 @@ import routes from './config/routes';
 
 const App:React.FunctionComponent<{}> = () => {
   return (
-    <div className="text-pink-500">
+    <div>
       <Router >
         <Switch>
             {routes.map((route,index)=>{
