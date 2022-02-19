@@ -4,3 +4,10 @@ export default interface Ichat {
     timestamp:any;
     profilePic:any;
 }
+
+export interface IAuthcontex {
+    name: string,
+    emeil: string,
+    id: string,
+    isOnline: boolean,
+}

@@ -57,24 +57,32 @@ const Navbar = ({BackButton}:any) => {
         </div>
         <div className='flex'>
             {toggleProfile && (
-              <div ref={menuRef} className="flex z-30 justify-stat items-start flex-col bg-[#040311] absolute
+              <div ref={menuRef} className="flex z-30 justify-start items-start flex-col bg-[#040311] absolute
               top-0 left-0 min-w-[250px] md:min-w-[400px] rounded h-screen" onClick={menu} >
                    <div className='p-4 w-full h-full'>
-                     <div className='w-full h-1/3'>
-                       <img className='h-full w-full object-contain' src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60' alt='profile' />
+                     <div className='flex flex-col items-center'>
+                        <div className='w-[200px] h-[200px] '>
+                          <img className='h-full w-full rounded-full object-cover' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKaiKiPcLJj7ufrj6M2KaPwyCT4lDSFA5oog&usqp=CAU' alt='profile' />
+                        </div>
+                        <div>
+                          <h1>Names</h1>
+                          <p>Email</p>
+                          <hr />
+                          <small>joined on:....</small>
+                        </div>
                      </div>
-                     <div className='my-8'>
-                      <p className="text-white my-4 text-base hover:text-gray-300">
+                     <div className='my-4'>
+                      <p className="text-white my-2 text-base hover:text-gray-300">
                       <Link className="cursor-pointer" to="Projects" onClick={menu}>Who likes you</Link></p>
-                      <p className="text-white my-4 text-base hover:text-gray-300">
+                      <p className="text-white my-2 text-base hover:text-gray-300">
                       <Link className="cursor-pointer" to="technologies" onClick={menu}>Who you likes</Link></p>
-                      <p className="text-white my-4 text-base hover:text-gray-300">
+                      <p className="text-white my-2 text-base hover:text-gray-300">
                       <Link className="cursor-pointer" to="about" onClick={menu}>About you</Link></p>
-                      <p className="text-white my-4 text-base hover:text-gray-300" >
+                      <p className="text-white my-2 text-base hover:text-gray-300" >
                       <Link className="cursor-pointer" to="contact" onClick={menu}>Contacts</Link></p>
-                      <p className="text-white my-4 text-base hover:text-gray-300">
+                      <p className="text-white my-2 text-base hover:text-gray-300">
                       <Link className="cursor-pointer" to="blog" onClick={menu}>Blog</Link></p>
-                      <p className="text-white my-4 text-xl font-[700] hover:text-gray-300" onClick={handleSignOut}>
+                      <p className="text-white my-2 text-xl font-[700] hover:text-gray-300" onClick={handleSignOut}>
                         Sign Out</p>
                      </div>
                   </div>
