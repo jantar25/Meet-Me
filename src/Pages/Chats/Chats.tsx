@@ -24,14 +24,14 @@ const Chats:React.FunctionComponent<Ipage> = () => {
     return ()=> onSub()
   },[])
  
-  
+
   return (
     <div>
       <Navbar BackButton="/" />
       <div className='py-8'>
         {peoples.map((people:any) =>(
           <div key={people.uid}>
-          <Link to={`/chats/${people.names}`}>
+          <Link to={`/chats/${people.uid}`}>
               <div className='flex justify-between items-center p-4 h-[70px] border-b border-gray-100'>
                   <div className='h-[48px] w-[48px] mr-4'>
                       <img src={people.avatar || avatarImg} alt={people.names} className='h-full w-full object-cover rounded-full ring-2 ring-gray-300'/>
