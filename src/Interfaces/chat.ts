@@ -1,8 +1,5 @@
 export default interface Ichat {
-    name:string;
-    message:string;
-    timestamp:any;
-    profilePic:any;
+    people:any;
 }
 
 export interface IAuthcontex {

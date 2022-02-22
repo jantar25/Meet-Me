@@ -102,7 +102,7 @@ const Navbar = ({BackButton}:any) => {
                      <div className='flex flex-col items-center relative'>
                         <div className='w-[100px] md:w-[200px] h-[100px] md:h-[200px] relative'>
                           <img className='h-full w-full rounded-full object-cover' 
-                          src={user? user.avatar : avatarImg} alt='profile' />
+                          src={user.avatar || avatarImg} alt='profile' />
                           <div className='absolute w-[40px] h-[40px] rounded-full text-white bg-pink-600 bottom-[2px] right-[2px] flex justify-center items-center'>
                             <input type="file" accept='Image/*' style={{display:'none'}} id="file" onChange={(e:any)=>setImg(e.target.files[0])} />
                             <label htmlFor="file"><BsCamera style={{fontSize:'25px',cursor:'pointer'}}/></label>
@@ -118,14 +118,12 @@ const Navbar = ({BackButton}:any) => {
                         <hr />
                       </div>
                      <div className='my-4'onClick={menu}>
-                      <p className="text-white my-2 text-base hover:text-gray-300">
-                      <Link className="cursor-pointer" to="Projects" onClick={menu}>Who likes you</Link></p>
-                      <p className="text-white my-2 text-base hover:text-gray-300">
-                      <Link className="cursor-pointer" to="technologies" onClick={menu}>Who you likes</Link></p>
-                      <p className="text-white my-2 text-base hover:text-gray-300">
-                      <Link className="cursor-pointer" to="about" onClick={menu}>About you</Link></p>
-                      <p className="text-white my-2 text-base hover:text-gray-300" >
-                      <Link className="cursor-pointer" to="contact" onClick={menu}>Contacts</Link></p>
+                      <p className="text-white my-2 text-lg hover:text-gray-500 font-[700]">
+                      <Link className="cursor-pointer" to="Projects" onClick={menu}>Matches<span>(4)</span></Link></p>
+                      <p className="text-white my-2 text-lg hover:text-gray-500 font-[700]">
+                      <Link className="cursor-pointer" to="technologies" onClick={menu}>Followers<span>(5)</span></Link></p>
+                      <p className="text-white my-2 text-lg hover:text-gray-500 font-[700]">
+                      <Link className="cursor-pointer" to="about" onClick={menu}>Follows<span>(3)</span></Link></p>
                       <button className="absolute bottom-[20px] text-white px-8 text-lg p-2 bg-pink-700 rounded-lg font-[700]" 
                       onClick={handleSignOut}>Sign Out</button>
                      </div>

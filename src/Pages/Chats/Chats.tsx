@@ -1,37 +1,56 @@
-import React from 'react'
+import React,{ useEffect,useState} from 'react'
+import { db, auth } from '../../firebase/firebase'
+import { collection,query,where,onSnapshot } from 'firebase/firestore'
 import Ipage from '../../Interfaces/page'
 import Navbar from '../../Components/Navbar/Navbar'
-import Chat from '../../Components/Chat/Chat'
+import { Link } from 'react-router-dom'
+const avatarImg = require("../../images/avatar.png")
+
+
 
 const Chats:React.FunctionComponent<Ipage> = () => {
+  const [peoples,setPeoples] = useState<any[]>([]);
+  
+  useEffect(() => {
+    const usersRef = collection(db,"users")
+    const q = query(usersRef,where('uid','not-in',[auth.currentUser?.uid]))
+    const onSub = onSnapshot(q,(snapshot:any) =>{
+      let peoples:any = []
+      snapshot.forEach((doc:any) => {
+      peoples.push(doc.data())
+    })
+      setPeoples(peoples);
+    })
+    return ()=> onSub()
+  },[])
+ 
+  
   return (
     <div>
       <Navbar BackButton="/" />
       <div className='py-8'>
-        <Chat 
-          name='Kate Morgan'
-          message="Hey Handsome!!"
-          timestamp="6 minutes ago"
-          profilePic='https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60'
-        />
-        <Chat 
-          name='Fred Tomson'
-          message="Give me my money dude"
-          timestamp="12 minutes ago"
-          profilePic='https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60'
-        />
-        <Chat 
-          name='John Morgan'
-          message="Where is my sister you mother fucker"
-          timestamp="46 minutes ago"
-          profilePic='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60'
-        />
-        <Chat 
-          name='Tinash Tray'
-          message="Hookups only"
-          timestamp="1 hour 26 minutes ago"
-          profilePic='https://media.istockphoto.com/photos/overjoyed-pretty-asian-woman-look-at-camera-with-sincere-laughter-picture-id1311084168?b=1&k=20&m=1311084168&s=170667a&w=0&h=mE8BgXPgcHO1UjSmdWYa21NIKDzJvMrjOffy39Ritpo='
-        />
+        {peoples.map((people:any) =>(
+          <div key={people.uid}>
+          <Link to={`/chats/${people.names}`}>
+              <div className='flex justify-between items-center p-4 h-[70px] border-b border-gray-100'>
+                  <div className='h-[48px] w-[48px] mr-4'>
+                      <img src={people.avatar || avatarImg} alt={people.names} className='h-full w-full object-cover rounded-full ring-2 ring-gray-300'/>
+                  </div>
+                  <div className='flex-1'>
+                      <h1 className='font-[700] text-black'>{people.names}</h1>
+                      <p className='text-gray-600 text-[12px]'>Hello there!!!</p>
+                  </div>
+                  <div className='flex flex-col'>
+                      <span className='text-gray-400 text-[10px]'>{people.createdAt.toDate().toDateString()}</span>
+                      {people.isOnline? 
+                      (<div>
+                        <span className='text-[12px] text-green-500 font-[700]'>Online</span>
+                      </div>) : null}
+                  </div>
+              </div>
+          </Link>
+      </div>
+        ))}
       </div>
     </div>
   )
