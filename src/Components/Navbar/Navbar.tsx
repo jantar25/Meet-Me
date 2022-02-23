@@ -71,7 +71,7 @@ const Navbar = ({BackButton}:any) => {
   }
 
   return (
-    <div className='text-pink-500'>
+    <div className='sticky top-0 z-50 bg-white text-pink-500'>
         <div className='flex justify-evenly text-2xl p-4 md:mx-16 lg:mx-24'>
           {BackButton? (
             <div className='flex-1 flex justify-start items-center' onClick={() => history.replace(BackButton)}>
@@ -96,7 +96,7 @@ const Navbar = ({BackButton}:any) => {
         </div>
         <div className='flex'>
             {toggleProfile && (
-              <div ref={menuRef} className="flex z-30 justify-start items-start flex-col bg-[#040311] absolute
+              <div ref={menuRef} className="flex justify-start items-start flex-col bg-[#040311] absolute
               top-0 left-0 min-w-[250px] md:min-w-[400px] rounded-r-lg h-screen" >
                    <div className='p-4 w-full h-full '>
                      <div className='flex flex-col items-center relative'>
@@ -118,12 +118,12 @@ const Navbar = ({BackButton}:any) => {
                         <hr />
                       </div>
                      <div className='my-4'onClick={menu}>
-                      <p className="text-white my-2 text-lg hover:text-gray-500 font-[700]">
-                      <Link className="cursor-pointer" to="Projects" onClick={menu}>Matches<span>(4)</span></Link></p>
-                      <p className="text-white my-2 text-lg hover:text-gray-500 font-[700]">
-                      <Link className="cursor-pointer" to="technologies" onClick={menu}>Followers<span>(5)</span></Link></p>
-                      <p className="text-white my-2 text-lg hover:text-gray-500 font-[700]">
-                      <Link className="cursor-pointer" to="about" onClick={menu}>Follows<span>(3)</span></Link></p>
+                      <p className="my-2 text-lg text-gray-500 font-[700]">
+                      <Link className="cursor-pointer" to="Projects" onClick={menu}>Matches(<span className='text-white'>4</span>)</Link></p>
+                      <p className=" my-2 text-lg text-gray-500 font-[700]">
+                      <Link className="cursor-pointer" to="technologies" onClick={menu}>Followers(<span className='text-white'>5</span>)</Link></p>
+                      <p className=" my-2 text-lg text-gray-500 font-[700]">
+                      <Link className="cursor-pointer" to="about" onClick={menu}>Follows(<span className='text-white'>3</span>)</Link></p>
                       <button className="absolute bottom-[20px] text-white px-8 text-lg p-2 bg-pink-700 rounded-lg font-[700]" 
                       onClick={handleSignOut}>Sign Out</button>
                      </div>

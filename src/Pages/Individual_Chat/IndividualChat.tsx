@@ -72,11 +72,11 @@ const IndividualChat = () => {
             <form className='flex fixed bottom-0 w-full border-t border-gray-500'>
                 <input value={input} onChange={e => setInput(e.target.value)} type='text' placeholder='Type a message...' 
                 className='flex-1 p-1 text-black'/>
-                <div className='text--pink-600 flex justify-center items-center mx-2'>
+                <div className='text-pink-600 bg-white flex justify-center items-center px-2'>
                     <input type="file" accept='Image/*' style={{display:'none'}} id="file" onChange={(e:any)=>setMedia(e.target.files[0])} />
                     <label htmlFor="file"><GrAttachment style={{fontSize:'20px',cursor:'pointer'}}/></label>
                 </div>
-                <div className='h-full bg-pink-500 flex justify-center items-center'>
+                <div className='h-full bg-pink-500 flex justify-center items-center p-1'>
                     <button onClick={handleSend} type='submit' className='font-[700] mx-2'>
                     <IoIosSend style={{fontSize:'30px',color:'white',cursor:'pointer'}} /></button>
                 </div>
