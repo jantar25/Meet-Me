@@ -36,10 +36,10 @@ const Home:React.FunctionComponent<Ipage> = () => {
             className='relative w-[600px] max-w-[80vw] h-[65vh] p-8 rounded-lg bg-center bg-cover shadow-2xl shadow-gray-500'>
               <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[700]'>{people.names}</h2>
             </div>
+            <SwipeButtons />
           </TinderCards>
         ))}
       </div>
-      <SwipeButtons />
     </div>
   )
 }

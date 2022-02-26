@@ -6,6 +6,7 @@ import { ref,getDownloadURL,uploadBytes,deleteObject } from 'firebase/storage'
 import { Link,useHistory } from 'react-router-dom'
 import { SiGooglechat } from 'react-icons/si'
 import { RiArrowGoBackFill } from 'react-icons/ri'
+import { AiOutlineClose } from 'react-icons/ai';
 import { BsCamera } from 'react-icons/bs'
 const wemeet = require("../../images/we meet.png")
 const avatarImg = require("../../images/avatar.png")
@@ -27,17 +28,17 @@ const Navbar = ({BackButton}:any) => {
         setUser(docSnap.data())
       }
     })
-    } 
+    }  
+    
     if(img){
-      const uploadImg = async () =>{
+        const uploadImg = async () =>{
         const imgRef = ref(storage,`avatar/${new Date().getTime()}-${img.name}`);
         try {
-          if(user.avatarPath){
-            await deleteObject(ref(storage,user.avatarPath))
-          }
           const snap = await uploadBytes(imgRef,img);
           const url = await getDownloadURL(ref(storage,snap.ref.fullPath));
-
+          if(user.avatarPath){
+            await deleteObject(ref(storage,user.avatarPath))
+          } 
           if (auth.currentUser!==null){
             await updateDoc(doc(db,"users",auth.currentUser.uid),{
               avatar:url,
@@ -79,8 +80,8 @@ const Navbar = ({BackButton}:any) => {
           </div>
           ) : (
             <div className='flex-1 flex justify-start items-center'>
-                <img className='h-[40px] w-[40px] rounded-full object-cover' 
-                          src={user.avatar || avatarImg} alt='profile' onClick={menu} /> 
+                <img className='h-[40px] w-[40px] rounded-full object-cover cursor-pointer' 
+                          src={user.avatar || avatarImg } alt='profile' onClick={menu} /> 
             </div>
           )}
             <div className='flex-1 flex justify-center items-center'>
@@ -95,10 +96,10 @@ const Navbar = ({BackButton}:any) => {
             </div>
         </div>
         <div className='flex'>
-            {toggleProfile && (
-              <div ref={menuRef} className="flex justify-start items-start flex-col bg-[#040311] absolute
-              top-0 left-0 min-w-[250px] md:min-w-[400px] rounded-r-lg h-screen" >
-                   <div className='p-4 w-full h-full '>
+            {user?
+              (<div ref={menuRef} className={`flex justify-start items-start flex-col bg-[#040311] fixed top-0 left-[-70vw] md:left-[-35vw] 
+              w-[70vw] md:w-[35vw] rounded-r-lg h-screen ${toggleProfile? 'translate-x-full' : 'translate-x-0'} ease-in-out duration-500`}>
+                   <div className='p-4 w-full h-full relative'>
                      <div className='flex flex-col items-center relative'>
                         <div className='w-[100px] md:w-[200px] h-[100px] md:h-[200px] relative'>
                           <img className='h-full w-full rounded-full object-cover' 
@@ -109,7 +110,7 @@ const Navbar = ({BackButton}:any) => {
                           </div>
                         </div>
                      </div>
-                     <div className='my-4' onClick={menu}>
+                     <div onClick={menu}>
                         <div className='flex flex-col justify-between items-center'>
                           <h1 className='text-xl text-white font-[700] mr-4'>{user && user.names}</h1>
                           <p className='text-sm text-gray-300 font-[100]'>{user && user.email}</p>
@@ -117,19 +118,21 @@ const Navbar = ({BackButton}:any) => {
                         <p className='text-sm text-gray-600 my-4'>joined on: {user && user.createdAt.toDate().toDateString()}</p>
                         <hr />
                       </div>
-                     <div className='my-4'onClick={menu}>
+                     <div onClick={menu}>
                       <p className="my-2 text-lg text-gray-500 font-[700]">
                       <Link className="cursor-pointer" to="Projects" onClick={menu}>Matches(<span className='text-white'>4</span>)</Link></p>
                       <p className=" my-2 text-lg text-gray-500 font-[700]">
                       <Link className="cursor-pointer" to="technologies" onClick={menu}>Followers(<span className='text-white'>5</span>)</Link></p>
                       <p className=" my-2 text-lg text-gray-500 font-[700]">
                       <Link className="cursor-pointer" to="about" onClick={menu}>Follows(<span className='text-white'>3</span>)</Link></p>
-                      <button className="absolute bottom-[20px] text-white px-8 text-lg p-2 bg-pink-700 rounded-lg font-[700]" 
+                      <button className="text-2xl mt-8 text-pink-700 rounded-lg font-[700]" 
                       onClick={handleSignOut}>Sign Out</button>
                      </div>
+                     <button className='absolute top-4 right-4' onClick={menu}>
+                      <AiOutlineClose style={{fontSize:'20px'}} />
+                    </button>
                   </div>
-              </div>
-            )}
+              </div>):null}
           </div>
     </div>
   ) 
