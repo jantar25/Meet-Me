@@ -13,8 +13,8 @@ const avatarImg = require("../../images/avatar.png")
 const Home:React.FunctionComponent<Ipage> = () => {
   
   const [peoples,setPeoples] = useState<any[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(5)
-  const [lastDirection, setLastDirection] = useState()
+  const [currentIndex, setCurrentIndex] = useState<any | null>(null);
+  const [lastDirection, setLastDirection] = useState();
   // used for outOfFrame closure
   const currentIndexRef = useRef(currentIndex)
 
@@ -23,11 +23,9 @@ const Home:React.FunctionComponent<Ipage> = () => {
       Array(peoples.length)
         .fill(0)
         .map((i) => React.createRef()),
-    []
+    [peoples.length]
   )
 console.log(currentIndex)
-
-
   const updateCurrentIndex = (val:any) => {
     setCurrentIndex(val)
     currentIndexRef.current = val
@@ -36,6 +34,9 @@ console.log(currentIndex)
   const canGoBack = currentIndex < peoples.length - 1
 
   const canSwipe = currentIndex >= 0
+
+  console.log(canGoBack)
+  console.log(canSwipe)
 
   // set last direction and decrease current index
   const swiped = (direction:any, nameToDelete:any, index:any) => {
@@ -75,6 +76,7 @@ console.log(currentIndex)
       peoples.push(doc.data())
     })
       setPeoples(peoples);
+      setCurrentIndex(peoples.length - 1)
     })
     return ()=> onSub()
   },[])
@@ -94,33 +96,22 @@ console.log(currentIndex)
             className='relative w-[600px] max-w-[80vw] h-[65vh] p-8 rounded-lg bg-center bg-cover shadow-2xl shadow-gray-500'>
               <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[700]'>{people.names}</h2>
             </div>
-            <div className='flex justify-between w-full p-4'>
+          </TinderCard>
+        ))}
+          <div className='flex justify-evenly w-full absolute bottom-4 '>
+          <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100
+             rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('right')}>
+                <AiOutlineClose style={{fontSize:'2rem'}} />
+            </div>
             <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
             rounded-full shadow-xl shadow-gray-400 text-[#f5b748] cursor-pointer' onClick={() => goBack()}>
                 <MdReplay style={{fontSize:'2rem'}} />
             </div>
-            <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100
-             rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('right')}>
-                <AiOutlineClose style={{fontSize:'2rem'}} />
-            </div>
-            <button className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
-            rounded-full shadow-xl shadow-gray-400 text-red-700' onClick={() => swipe('left')}>
+            <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
+            rounded-full shadow-xl shadow-gray-400 text-red-700 cursor-pointer' onClick={() => swipe('left')}>
                 <MdFavorite style={{fontSize:'2rem'}} />
-            </button>
-        </div>
-          </TinderCard>
-        ))}
-      </div>
-      <div className='absolute bottom-2'>
-      {lastDirection ? (
-        <h2 key={lastDirection} className='infoText'>
-          You swiped {lastDirection}
-        </h2>
-      ) : (
-        <h2 className='infoText'>
-          Swipe a card or press a button to get Restore Card button visible!
-        </h2>
-      )}
+            </div>
+          </div>
       </div>
     </div>
   )

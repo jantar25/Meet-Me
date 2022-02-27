@@ -8,6 +8,7 @@ import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
 import PrivateRoutes from './config/PrivateRoutes';
 
+
 const App:React.FunctionComponent<{}> = () => {
   return (
     <AuthProvider>
