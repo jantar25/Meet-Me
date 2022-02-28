@@ -25,7 +25,7 @@ const Home:React.FunctionComponent<Ipage> = () => {
         .map((i) => React.createRef()),
     [peoples.length]
   )
-console.log(currentIndex)
+
   const updateCurrentIndex = (val:any) => {
     setCurrentIndex(val)
     currentIndexRef.current = val
@@ -34,9 +34,6 @@ console.log(currentIndex)
   const canGoBack = currentIndex < peoples.length - 1
 
   const canSwipe = currentIndex >= 0
-
-  console.log(canGoBack)
-  console.log(canSwipe)
 
   // set last direction and decrease current index
   const swiped = (direction:any, nameToDelete:any, index:any) => {
@@ -92,15 +89,16 @@ console.log(currentIndex)
           onSwipe={(dir) => swiped(dir, people.uid, index)}
           onCardLeftScreen={() => outOfFrame(people.uid, index)}
           preventSwipe={['up','down']}>
-            <div style={{backgroundImage:`url(${people.avatar || avatarImg})`}} 
-            className='relative w-[600px] max-w-[80vw] h-[65vh] p-8 rounded-lg bg-center bg-cover shadow-2xl shadow-gray-500'>
-              <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[700]'>{people.names}</h2>
+            <div className='relative w-[600px] max-w-[80vw] h-[65vh] rounded-lg'>
+            <div style={{filter:'brightness(80%)',backgroundImage:`url(${people.avatar || avatarImg})`}} 
+            className='w-[600px] max-w-[80vw] h-[65vh] p-8 rounded-lg bg-center bg-cover shadow-2xl shadow-gray-500' />
+            <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[700]'>{people.names}</h2>
             </div>
           </TinderCard>
         ))}
           <div className='flex justify-evenly w-full absolute bottom-4 '>
           <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100
-             rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('right')}>
+             rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('left')}>
                 <AiOutlineClose style={{fontSize:'2rem'}} />
             </div>
             <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
@@ -108,7 +106,7 @@ console.log(currentIndex)
                 <MdReplay style={{fontSize:'2rem'}} />
             </div>
             <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
-            rounded-full shadow-xl shadow-gray-400 text-red-700 cursor-pointer' onClick={() => swipe('left')}>
+            rounded-full shadow-xl shadow-gray-400 text-red-700 cursor-pointer' onClick={() => swipe('right')}>
                 <MdFavorite style={{fontSize:'2rem'}} />
             </div>
           </div>

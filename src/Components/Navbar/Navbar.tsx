@@ -97,12 +97,12 @@ const Navbar = ({BackButton}:any) => {
         </div>
         <div className='flex'>
             {user?
-              (<div ref={menuRef} className={`flex justify-start items-start flex-col bg-[#040311] fixed top-0 left-[-70vw] md:left-[-35vw] 
-              w-[70vw] md:w-[35vw] rounded-r-lg h-screen ${toggleProfile? 'translate-x-full' : 'translate-x-0'} ease-in-out duration-500`}>
+              (<div ref={menuRef} className={`flex justify-start items-start flex-col bg-[#F5F0F0] fixed top-0 left-[-75vw] sm:left-[-35vw] overflow-y-auto
+              w-[75vw] sm:w-[35vw] rounded-r-lg h-screen ${toggleProfile? 'translate-x-full' : 'translate-x-0'} ease-in-out duration-500`}>
                    <div className='p-4 w-full h-full relative'>
                      <div className='flex flex-col items-center relative'>
-                        <div className='w-[100px] md:w-[200px] h-[100px] md:h-[200px] relative'>
-                          <img className='h-full w-full rounded-full object-cover' 
+                        <div className='w-[120px] md:w-[200px] h-[120px] md:h-[200px] relative'>
+                          <img className='h-full w-full rounded-full object-cover ring-2 ring-white' 
                           src={user.avatar || avatarImg} alt='profile' />
                           <div className='absolute w-[40px] h-[40px] rounded-full text-white bg-pink-600 bottom-[2px] right-[2px] flex justify-center items-center'>
                             <input type="file" accept='Image/*' style={{display:'none'}} id="file" onChange={(e:any)=>setImg(e.target.files[0])} />
@@ -112,20 +112,32 @@ const Navbar = ({BackButton}:any) => {
                      </div>
                      <div onClick={menu}>
                         <div className='flex flex-col justify-between items-center'>
-                          <h1 className='text-xl text-white font-[700] mr-4'>{user && user.names}</h1>
-                          <p className='text-sm text-gray-300 font-[100]'>{user && user.email}</p>
+                          <h1 className='text-2xl text-black font-[900] mr-4'>{user && user.names}</h1>
+                          <p className='text-sm text-black font-[100]'>{user && user.email}</p>
                         </div>
-                        <p className='text-sm text-gray-600 my-4'>joined on: {user && user.createdAt.toDate().toDateString()}</p>
+                        <p className='text-sm text-gray-900 my-4'>joined on: {user && user.createdAt.toDate().toDateString()}</p>
                         <hr />
                       </div>
-                     <div onClick={menu}>
-                      <p className="my-2 text-lg text-gray-500 font-[700]">
-                      <Link className="cursor-pointer" to="Projects" onClick={menu}>Matches(<span className='text-white'>4</span>)</Link></p>
-                      <p className=" my-2 text-lg text-gray-500 font-[700]">
-                      <Link className="cursor-pointer" to="technologies" onClick={menu}>Followers(<span className='text-white'>5</span>)</Link></p>
-                      <p className=" my-2 text-lg text-gray-500 font-[700]">
-                      <Link className="cursor-pointer" to="about" onClick={menu}>Follows(<span className='text-white'>3</span>)</Link></p>
-                      <button className="text-2xl mt-8 text-pink-700 rounded-lg font-[700]" 
+                     <div className='flex flex-col' onClick={menu}>
+                      <Link className="cursor-pointer" to="Projects" onClick={menu}>
+                          <div className=" flex flex-col my-1 bg-white rounded-lg items-center drop-shadow-lg">
+                            <h3 className='text-md text-gray-500 font-[700]'>Matches</h3>
+                            <span className='text-pink-700 font-[700]'>469</span>
+                          </div>
+                        </Link>
+                        <Link className="cursor-pointer" to="Projects" onClick={menu}>
+                          <div className=" flex flex-col my-1 bg-white rounded-lg items-center drop-shadow-lg">
+                            <h3 className='text-md text-gray-500 font-[700]'>Followers</h3>
+                            <span className='text-pink-700 font-[700]'>469</span>
+                          </div>
+                        </Link>
+                        <Link className="cursor-pointer" to="Projects" onClick={menu}>
+                          <div className=" flex flex-col my-1 bg-white rounded-lg items-center drop-shadow-lg">
+                            <h3 className='text-md text-gray-500 font-[700]'>Follows</h3>
+                            <span className='text-pink-700 font-[700]'>469</span>
+                          </div>
+                        </Link>
+                      <button className="text-xl mt-4 text-white p-2 rounded-lg font-[700] bg-pink-700 rounded-lg" 
                       onClick={handleSignOut}>Sign Out</button>
                      </div>
                      <button className='absolute top-4 right-4' onClick={menu}>
