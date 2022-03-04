@@ -97,7 +97,7 @@ const Navbar = ({BackButton}:any) => {
         </div>
         <div className='flex'>
             {user?
-              (<div ref={menuRef} className={`flex justify-start items-start flex-col bg-[#F5F0F0] fixed top-0 left-[-75vw] sm:left-[-35vw] overflow-y-auto
+              (<div ref={menuRef} className={`flex justify-center items-center flex-col bg-[#F5F0F0] fixed top-0 left-[-75vw] sm:left-[-35vw] overflow-y-auto
               w-[75vw] sm:w-[35vw] rounded-r-lg h-screen ${toggleProfile? 'translate-x-full' : 'translate-x-0'} ease-in-out duration-500`}>
                    <div className='p-4 w-full h-full relative'>
                      <div className='flex flex-col items-center relative'>

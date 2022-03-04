@@ -16,8 +16,8 @@ const AuthProvider = ({children}:any) =>{
     },[])
 
     if(loading) {
-        return (<div className="relative ">
-                    <h2 className="fixed top-1/2 left-1/2 ">Loading ...</h2>
+        return (<div className="h-screen w-screen flex item-center justify-center">
+                    <h2 className="text-2xl font-[800]">Loading ...</h2>
                 </div>)}
 
     return <AuthContext.Provider value={user}>
