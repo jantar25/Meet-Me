@@ -1,5 +1,4 @@
-import React,{ useEffect,useState,useContext,useRef } from 'react'
-import Moment from 'react-moment'
+import React,{ useEffect,useState,useContext } from 'react'
 import { db,storage } from '../../firebase/firebase'
 import { ref,getDownloadURL,uploadBytes } from 'firebase/storage' 
 import { collection,query,where,onSnapshot,addDoc,Timestamp,orderBy } from 'firebase/firestore'
@@ -10,6 +9,7 @@ import { useLocation } from 'react-router-dom'
 import { GrAttachment } from 'react-icons/gr';
 import { IoIosSend } from 'react-icons/io'
 import {AuthContext} from '../../Contex/Auth'
+import Message from '../../Components/Message/Message'
 const avatarImg = require("../../images/avatar.png")
 
 
@@ -25,7 +25,7 @@ const IndividualChat = () => {
     const [userChat,setUserChat] = useState<any>({});
     const [image,setImage] = useState<any>('');
     const [messages,setMessages] =useState<any[]>([]);
-    const scrollRef= useRef()
+    
     
 
     useEffect(() => {
@@ -93,16 +93,7 @@ const IndividualChat = () => {
                 <h2 className='text-[12px] text-center text-gray-300 mb-4'>You matched on {userChat.createdAt?.toDate().toDateString()}</h2>
             </div>
             { messages.length? messages.map((message,index) => (
-                    <div key={index} className='flex flex-col items-center px-4 py-2 my-2'>
-                            <p className={`${message.from===user1? "bg-pink-500 p-2 rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl text-[12px] text-white font-bold ml-auto"
-                           : "bg-gray-300 p-2 rounded-tl-2xl rounded-tr-2xl rounded-br-2xl text-[12px] text-black font-bold mr-auto"}`}>
-                                { message.media? <img className='w-full md:w-[500px] rounded-lg mb-1' src={message.media} alt='chatImage' /> : null }
-                                {message.text}
-                            </p>
-                            <small className={`${message.from===user1? 'text-[10px] ml-auto':'text-[10px] mr-auto'  }`}>
-                                <Moment fromNow>{message.createdAt.toDate()}</Moment>
-                            </small>
-                    </div>
+                <Message key={index} message={message} user1={user1} />
             )) : null } 
         </div>
         <div>

@@ -43,15 +43,12 @@ const Navbar = ({BackButton}:any) => {
         };
         uploadImg();
       }
-  },[])
 
-
-  useEffect(()=>{
-    getDoc(doc(db,'users',currentUser)).then((docSnap)=>{
-      if(docSnap.exists()){
-        setUser(docSnap.data())
-      }
-    }) 
+      getDoc(doc(db,'users',currentUser)).then((docSnap)=>{
+        if(docSnap.exists()){
+          setUser(docSnap.data())
+        }
+      }) 
   },[img])
 
 
