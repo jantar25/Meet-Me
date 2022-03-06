@@ -20,16 +20,9 @@ const Navbar = ({BackButton}:any) => {
   const history = useHistory();
   const menuRef = useRef<any>([]);
   const menu = () =>{setToggleProfile(!toggleProfile)} 
+  const currentUser:any = auth.currentUser?.uid;
 
-  useEffect(()=>{
-    if (auth.currentUser!==null){
-    getDoc(doc(db,'users',auth.currentUser.uid)).then((docSnap)=>{
-      if(docSnap.exists()){
-        setUser(docSnap.data())
-      }
-    })
-    }  
-    
+  useEffect(()=>{      
     if(img){
         const uploadImg = async () =>{
         const imgRef = ref(storage,`avatar/${new Date().getTime()}-${img.name}`);
@@ -39,12 +32,10 @@ const Navbar = ({BackButton}:any) => {
           if(user.avatarPath){
             await deleteObject(ref(storage,user.avatarPath))
           } 
-          if (auth.currentUser!==null){
-            await updateDoc(doc(db,"users",auth.currentUser.uid),{
+            await updateDoc(doc(db,"users",currentUser),{
               avatar:url,
               avatarPath:snap.ref.fullPath,
             })
-            }
             setUser('')
           
         } catch (error:any) {
@@ -52,8 +43,17 @@ const Navbar = ({BackButton}:any) => {
         };
         uploadImg();
       }
+  },[])
 
+
+  useEffect(()=>{
+    getDoc(doc(db,'users',currentUser)).then((docSnap)=>{
+      if(docSnap.exists()){
+        setUser(docSnap.data())
+      }
+    }) 
   },[img])
+
 
   useEffect(()=>{  
     let handeler = (e:any) => {if(menuRef.current && !menuRef.current.contains(e.target)){setToggleProfile(false)}} 
@@ -62,13 +62,11 @@ const Navbar = ({BackButton}:any) => {
   },[])
 
   const handleSignOut = async () =>{
-    if (auth.currentUser!==null){
-      await updateDoc(doc(db,'users',auth.currentUser.uid),{
+      await updateDoc(doc(db,'users',currentUser),{
         isOnline:false,
        });
       await signOut(auth);
       history.push('/login')
-    }
   }
 
   return (

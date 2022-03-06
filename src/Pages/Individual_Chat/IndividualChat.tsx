@@ -3,7 +3,9 @@ import Moment from 'react-moment'
 import { db,storage } from '../../firebase/firebase'
 import { ref,getDownloadURL,uploadBytes } from 'firebase/storage' 
 import { collection,query,where,onSnapshot,addDoc,Timestamp,orderBy } from 'firebase/firestore'
-import Navbar from '../../Components/Navbar/Navbar'
+import { useHistory } from 'react-router-dom'
+import { RiArrowGoBackFill } from 'react-icons/ri'
+import { BsCameraVideoFill } from 'react-icons/bs'
 import { useLocation } from 'react-router-dom'
 import { GrAttachment } from 'react-icons/gr';
 import { IoIosSend } from 'react-icons/io'
@@ -14,6 +16,7 @@ const avatarImg = require("../../images/avatar.png")
 
 const IndividualChat = () => {
     const location = useLocation();
+    const history = useHistory();
     const currentUser= useContext<any>(AuthContext);
     const user1=currentUser?.uid
     const user2 = location.pathname.split('/')[2];
@@ -51,19 +54,19 @@ const IndividualChat = () => {
 
     const handleSend = async (e:any) =>{
         e.preventDefault();
-        let url;
+        let urlPath;
         if(image){
             const imgRef = ref(storage,`images/${new Date().getTime()}-${image.name}`);
             const snap = await uploadBytes(imgRef,image);
             const dbUrl = await getDownloadURL(ref(storage,snap.ref.fullPath));
-            url=dbUrl;
+            urlPath=dbUrl;
         }
         await addDoc(collection(db, 'messages', id,'chat'),{
             text:input,
             from:user1,
             to:user2,
             createdAt: Timestamp.fromDate(new Date()),
-            media:url || '',
+            media:urlPath || '',
         })
         setInput("");
         setImage("");
@@ -71,16 +74,23 @@ const IndividualChat = () => {
 
   return (
     <div>
-        <Navbar BackButton="/chats" />
         <div className='mb-[30px]'>
-            <div className='flex flex-col items-center fixed top-16 w-full bg-white'>
-                <div className='flex p-2 items-center'>
-                    <div className='h-[42px] w-[42px] mr-2'>
-                        <img src={userChat.avatar || avatarImg} alt='' className='h-full w-full object-cover rounded-full ring-2 ring-gray-300'/>
+            <div className='flex flex-col fixed top-0 w-full bg-white'>
+                <div className='flex justify-evenly px-4 pt-2 md:mx-16 lg:mx-24 text-pink-500'>
+                    <div className='flex-1 flex justify-start items-center text-2xl' onClick={() => history.replace('/chats')}>
+                        <RiArrowGoBackFill style={{cursor:'pointer'}} />
                     </div>
-                    <span className='text-black font-[700]'>{userChat.names}</span>
+                    <div className='flex p-2 items-center'>
+                        <div className='h-[35px] w-[35px] mr-2'>
+                            <img src={userChat.avatar || avatarImg} alt='' className='h-full w-full object-cover rounded-full ring-2 ring-gray-300'/>
+                        </div>
+                        <span className='text-black font-[700]'>{userChat.names}</span>
+                    </div>
+                    <div className='flex-1 flex justify-end items-center text-2xl' onClick={() => history.replace('')}>
+                        <BsCameraVideoFill style={{cursor:'pointer'}} />
+                    </div>
                 </div>
-                <h2 className='text-[12px] text-gray-300 mb-4'>You matched on {userChat.createdAt?.toDate().toDateString()}</h2>
+                <h2 className='text-[12px] text-center text-gray-300 mb-4'>You matched on {userChat.createdAt?.toDate().toDateString()}</h2>
             </div>
             { messages.length? messages.map((message,index) => (
                     <div key={index} className='flex flex-col items-center px-4 py-2 my-2'>
@@ -97,7 +107,7 @@ const IndividualChat = () => {
         </div>
         <div>
             <form className='flex fixed bottom-0 w-full border-t border-gray-500' onSubmit={handleSend}>
-                <input value={input} onChange={e => setInput(e.target.value)} type='text' placeholder='Type a message...' 
+                <input required value={input} onChange={e => setInput(e.target.value)} type='text' placeholder='Type a message...' 
                 className='flex-1 p-1 text-black'/>
                 <div className='text-pink-600 bg-white flex justify-center items-center px-2'>
                     <input type="file" accept='Image/*' style={{display:'none'}} id="file" onChange={(e:any)=>setImage(e.target.files[0])} />
