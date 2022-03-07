@@ -1,7 +1,7 @@
 import React,{ useEffect,useState,useContext } from 'react'
 import { db,storage } from '../../firebase/firebase'
 import { ref,getDownloadURL,uploadBytes } from 'firebase/storage' 
-import { collection,query,where,onSnapshot,addDoc,Timestamp,orderBy } from 'firebase/firestore'
+import { collection,query,where,onSnapshot,addDoc,Timestamp,orderBy,doc,setDoc } from 'firebase/firestore'
 import { useHistory } from 'react-router-dom'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import { BsCameraVideoFill } from 'react-icons/bs'
@@ -68,6 +68,14 @@ const IndividualChat = () => {
             createdAt: Timestamp.fromDate(new Date()),
             media:urlPath || '',
         })
+        await setDoc(doc(db, 'lastMessages', id),{
+            text:input,
+            from:user1,
+            to:user2,
+            createdAt: Timestamp.fromDate(new Date()),
+            media:urlPath || '',
+            unread:true,
+        })
         setInput("");
         setImage("");
     }
@@ -75,7 +83,7 @@ const IndividualChat = () => {
   return (
     <div>
         <div className='mb-[30px]'>
-            <div className='flex flex-col fixed top-0 w-full bg-white'>
+            <div className='flex flex-col sticky top-0 w-full bg-white'>
                 <div className='flex justify-evenly px-4 pt-2 md:mx-16 lg:mx-24 text-pink-500'>
                     <div className='flex-1 flex justify-start items-center text-2xl' onClick={() => history.replace('/chats')}>
                         <RiArrowGoBackFill style={{cursor:'pointer'}} />
@@ -84,7 +92,12 @@ const IndividualChat = () => {
                         <div className='h-[35px] w-[35px] mr-2'>
                             <img src={userChat.avatar || avatarImg} alt='' className='h-full w-full object-cover rounded-full ring-2 ring-gray-300'/>
                         </div>
-                        <span className='text-black font-[700]'>{userChat.names}</span>
+                        <div className='flex flex-col'>
+                            <span className='text-black font-[700]'>{userChat.names}</span>
+                            {userChat.isOnline? 
+                            (<span className='text-[10px] text-green-500 font-[700]'>Online</span>) : 
+                            (<span className='text-[10px] text-red-500 font-[700]'>Offline</span>)}
+                        </div>
                     </div>
                     <div className='flex-1 flex justify-end items-center text-2xl' onClick={() => history.replace('')}>
                         <BsCameraVideoFill style={{cursor:'pointer'}} />
@@ -92,9 +105,11 @@ const IndividualChat = () => {
                 </div>
                 <h2 className='text-[12px] text-center text-gray-300 mb-4'>You matched on {userChat.createdAt?.toDate().toDateString()}</h2>
             </div>
-            { messages.length? messages.map((message,index) => (
-                <Message key={index} message={message} user1={user1} />
-            )) : null } 
+            <div>
+                { messages.length? messages.map((message,index) => (
+                    <Message key={index} message={message} user1={user1} />
+                )) : null } 
+            </div>
         </div>
         <div>
             <form className='flex fixed bottom-0 w-full border-t border-gray-500' onSubmit={handleSend}>
