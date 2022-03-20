@@ -2,7 +2,7 @@ import React, { useState,useEffect, useMemo, useRef } from 'react'
 import Ipage from '../../Interfaces/page'
 import TinderCard from "react-tinder-card"
 import { db, auth } from '../../firebase/firebase'
-import { collection,query,where,onSnapshot } from 'firebase/firestore'
+import { collection,query,where,onSnapshot, setDoc, doc, getDocs } from 'firebase/firestore'
 import { AiOutlineClose } from 'react-icons/ai';
 import { MdReplay,MdFavorite } from 'react-icons/md';
 import Navbar from '../../Components/Navbar/Navbar'
@@ -15,6 +15,7 @@ const Home:React.FunctionComponent<Ipage> = () => {
   const [peoples,setPeoples] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState<any | null>(null);
   const [lastDirection, setLastDirection] = useState();
+  const user:any = auth.currentUser
   // used for outOfFrame closure
   const currentIndexRef = useRef(currentIndex)
 
@@ -26,10 +27,12 @@ const Home:React.FunctionComponent<Ipage> = () => {
     [peoples.length]
   )
 
+
   const updateCurrentIndex = (val:any) => {
     setCurrentIndex(val)
     currentIndexRef.current = val
   }
+  const userSwiped:any = peoples[currentIndex]
 
   const canGoBack = currentIndex < peoples.length - 1
 
@@ -51,9 +54,16 @@ const Home:React.FunctionComponent<Ipage> = () => {
   }
 
   const swipe = async (dir:any) => {
+    if(!peoples[currentIndex]) return;
+
     if (canSwipe && currentIndex < peoples.length) {
-      await childRefs[currentIndex]?.current?.swipe(dir) // Swipe the card!
+      await childRefs[currentIndex]?.current?.swipe(dir) ;// Swipe the card!
     }
+
+    if(dir==='left'){
+      setDoc(doc(db,"users",user.uid,'passes',userSwiped.uid),userSwiped)
+    } else {}
+    
   }
 
   // increase current index and show card
@@ -64,18 +74,24 @@ const Home:React.FunctionComponent<Ipage> = () => {
     await childRefs[newIndex]?.current?.restoreCard()
   }
 
-  useEffect(() => {
-    const usersRef = collection(db,"users")
-    const q = query(usersRef,where('uid','not-in',[auth.currentUser?.uid]))
-    const onSub = onSnapshot(q,(snapshot:any) =>{
-      let peoples:any = [];
-      snapshot.forEach((doc:any) => {
-      peoples.push(doc.data())
-    })
-      setPeoples(peoples);
-      setCurrentIndex(peoples.length - 1)
-    })
-    return ()=> onSub()
+  useEffect(() =>  {
+    const fetchCards = async () =>{
+      const passes:any = await getDocs(collection(db,"users",user.uid,'passes')).then(
+        snapshot => snapshot.docs.map(doc=>doc.id)
+      )
+      const passedUserIds = passes.length> 0 ? passes : ['test']
+      const usersRef = collection(db,"users")
+      const q = query(usersRef,where('uid','not-in',[...passedUserIds]))
+      const onSub = onSnapshot(q,(snapshot:any) =>{
+        let peoples:any = [];
+        peoples.push(snapshot.docs.filter((doc:any)=>doc.id !== user.uid)
+        .map((doc:any)=>({id:doc.id,...doc.data()})))
+        setPeoples(peoples[0]);
+        setCurrentIndex(peoples[0].length - 1)
+      })
+      return ()=> onSub()
+    }
+    fetchCards()
   },[])
 
   return (
@@ -98,7 +114,7 @@ const Home:React.FunctionComponent<Ipage> = () => {
         ))}
           <div className='flex justify-evenly w-full absolute bottom-4 '>
           <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100
-             rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('left')}>
+             rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('Left')}>
                 <AiOutlineClose style={{fontSize:'2rem'}} />
             </div>
             <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
@@ -106,7 +122,7 @@ const Home:React.FunctionComponent<Ipage> = () => {
                 <MdReplay style={{fontSize:'2rem'}} />
             </div>
             <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
-            rounded-full shadow-xl shadow-gray-400 text-red-700 cursor-pointer' onClick={() => swipe('right')}>
+            rounded-full shadow-xl shadow-gray-400 text-red-700 cursor-pointer' onClick={() => swipe('Right')}>
                 <MdFavorite style={{fontSize:'2rem'}} />
             </div>
           </div>
