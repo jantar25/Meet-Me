@@ -2,7 +2,7 @@ import React, { useState,useEffect, useMemo, useRef } from 'react'
 import Ipage from '../../Interfaces/page'
 import TinderCard from "react-tinder-card"
 import { db, auth } from '../../firebase/firebase'
-import { collection,query,where,onSnapshot, setDoc, doc, getDocs } from 'firebase/firestore'
+import { collection,query,where,onSnapshot, setDoc, doc, getDocs,getDoc, serverTimestamp } from 'firebase/firestore'
 import { AiOutlineClose } from 'react-icons/ai';
 import { MdReplay,MdFavorite } from 'react-icons/md';
 import Navbar from '../../Components/Navbar/Navbar'
@@ -60,9 +60,31 @@ const Home:React.FunctionComponent<Ipage> = () => {
       await childRefs[currentIndex]?.current?.swipe(dir) ;// Swipe the card!
     }
 
-    if(dir==='left'){
+    if(dir==='Left'){
       setDoc(doc(db,"users",user.uid,'passes',userSwiped.uid),userSwiped)
-    } else {}
+    } else {
+      const loggedInProfile = await (await getDoc(doc(db, 'users', user.uid))).data();
+
+      getDoc(doc(db, 'users', userSwiped.uid,'swipes', user.uid)).then((documentSnapshot)=>{
+        if(documentSnapshot.exists()){
+          const generatedId = (id1:any,id2:any) => (id1>id2 ? id1+id2 : id2+id1)
+
+          setDoc(doc(db,"users",user.uid,'swipes',userSwiped.uid),userSwiped)
+
+          setDoc(doc(db,"matches",generatedId(user.uid,userSwiped.uid)),{
+            users:{
+              [user.uid] : loggedInProfile,
+              [userSwiped.uid]:userSwiped,
+            },
+            usersMatched: [user.uid,userSwiped.uid],
+            timestamp: serverTimestamp(),
+          })
+
+        } else{
+          setDoc(doc(db,"users",user.uid,'swipes',userSwiped.uid),userSwiped)
+        }
+      })
+    }
     
   }
 
@@ -76,12 +98,14 @@ const Home:React.FunctionComponent<Ipage> = () => {
 
   useEffect(() =>  {
     const fetchCards = async () =>{
-      const passes:any = await getDocs(collection(db,"users",user.uid,'passes')).then(
-        snapshot => snapshot.docs.map(doc=>doc.id)
-      )
-      const passedUserIds = passes.length> 0 ? passes : ['test']
+      const passes:any = await getDocs(collection(db,"users",user.uid,'passes'))
+      .then(snapshot => snapshot.docs.map(doc=>doc.id));
+      const swapes:any = await getDocs(collection(db,"users",user.uid,'swipes'))
+      .then(snapshot => snapshot.docs.map(doc=>doc.id));
+      const passedUserIds = passes.length> 0 ? passes : ['test'];
+      const swapedUserIds = swapes.length> 0 ? swapes : ['test'];
       const usersRef = collection(db,"users")
-      const q = query(usersRef,where('uid','not-in',[...passedUserIds]))
+      const q = query(usersRef,where('uid','not-in',[...passedUserIds,...swapedUserIds]))
       const onSub = onSnapshot(q,(snapshot:any) =>{
         let peoples:any = [];
         peoples.push(snapshot.docs.filter((doc:any)=>doc.id !== user.uid)
@@ -92,7 +116,7 @@ const Home:React.FunctionComponent<Ipage> = () => {
       return ()=> onSub()
     }
     fetchCards()
-  },[])
+  },[db])
 
   return (
     <div>
