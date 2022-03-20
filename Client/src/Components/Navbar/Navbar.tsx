@@ -8,6 +8,9 @@ import { SiGooglechat } from 'react-icons/si'
 import { RiArrowGoBackFill } from 'react-icons/ri'
 import { AiOutlineClose } from 'react-icons/ai';
 import { BsCamera } from 'react-icons/bs'
+// import { io } from 'socket.io-client'
+
+// const socket = io('http://localhost:7000/')
 const wemeet = require("../../images/we meet.png")
 const avatarImg = require("../../images/avatar.png")
 
@@ -22,6 +25,10 @@ const Navbar = ({BackButton}:any) => {
   const menu = () =>{setToggleProfile(!toggleProfile)} 
   const currentUser:any = auth.currentUser?.uid;
 
+  // const handleSocketUser = () =>{
+  //   socket.emit('new_user',currentUser);
+  // }
+  
   useEffect(()=>{      
     if(img){
         const uploadImg = async () =>{
@@ -85,7 +92,7 @@ const Navbar = ({BackButton}:any) => {
                 </Link>
             </div>
             <div className='flex-1 flex justify-end items-center'>
-              <Link to="/chats">
+              <Link to="/chats" /*{onClick={handleSocketUser}}*/ >
                 <SiGooglechat style={{cursor:'pointer'}} />
               </Link>
             </div>

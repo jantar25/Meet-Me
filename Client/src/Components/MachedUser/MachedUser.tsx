@@ -2,6 +2,8 @@ import React,{useEffect,useState} from 'react'
 import { Link } from 'react-router-dom'
 import { db } from '../../firebase/firebase'
 import { doc,getDoc,onSnapshot,updateDoc} from 'firebase/firestore'
+import { Badge } from '@material-ui/core'
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles'
 const avatarImg = require("../../images/avatar.png")
 
 
@@ -11,6 +13,13 @@ const MachedUser = ({people,currentUser}:any) => {
     const user1=currentUser;
     const user2=people.uid;
     const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`
+    const theme:any = createTheme({
+        palette: {
+            primary: {
+            main: '#FF1493'
+          }
+        }
+      });
 
     useEffect(()=>{
         let unsub = onSnapshot(doc(db, 'lastMessages',id) , (doc:any) =>{
@@ -28,6 +37,7 @@ const MachedUser = ({people,currentUser}:any) => {
     }
 
   return (
+    <MuiThemeProvider theme={theme}>
     <Link to={`/chats/${people.uid}`} onClick={handleRead}>
     <div className='flex justify-between items-center p-4 h-[70px] border-b border-gray-100'>
         <div className='h-[48px] w-[48px]'>
@@ -41,13 +51,20 @@ const MachedUser = ({people,currentUser}:any) => {
                     {data.text}</p>
             )}
         </div>
-        <div className='flex flex-col'>
-            {data?.from !== currentUser && data?.unread &&
-                 (<small className='text-[14px] text-green-500 font-[800] text-right'>new</small>) }
-            <span className='text-gray-400 text-[10px]'>{people.createdAt.toDate().toDateString()}</span>
+        <div className='text-right'>
+            <div className='flex items-center justify-center mb-4'>
+                {data?.from !== currentUser && data?.unread &&
+                 (<Badge badgeContent={1} color="primary" /> ) }
+            </div>
+            <div className='flex items-center justify-center'>
+            {data && (<span className='text-gray-400 text-[10px]'>
+                {data?.createdAt.toDate().getHours()+ ":" + data?.createdAt.toDate().getMinutes()}
+            </span>)}
+            </div>
         </div>
     </div>
 </Link>
+</MuiThemeProvider>
   )
 }
 

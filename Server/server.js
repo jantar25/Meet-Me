@@ -12,13 +12,29 @@ const io = new Server(httpServer, {
   }
  });
 const PORT = 7000;
-
+const users = {};
 
 
 io.on("connection", (socket) => {
   console.log('Someone got connected with id: ' + socket.id)
   socket.on("disconnect", () => {
     console.log(`${socket.id} got disconnected`)
+    for(let user in users){
+      if(users[user] === socket.id){
+        delete users[user]
+      }
+    }
+  });
+  socket.on("new_user", (currentUser) =>{
+    users[currentUser] = socket.id;
+    io.emit("AllUsers",users)
+  })
+  socket.on("SendMessage", (data) => {
+    const receiver=data.receiver;
+    const socketId = users[receiver];
+    io.to(socketId).emit("newMessage",data)
+    console.log(data)
+    console.log(socketId)
   });
 });
 

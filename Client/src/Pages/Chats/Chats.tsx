@@ -6,7 +6,6 @@ import Navbar from '../../Components/Navbar/Navbar'
 import MachedUser from '../../Components/MachedUser/MachedUser'
 
 
-
 const Chats:React.FunctionComponent<Ipage> = () => {
   const [peoples,setPeoples] = useState<any[]>([]);
   const currentUser:any=auth.currentUser?.uid

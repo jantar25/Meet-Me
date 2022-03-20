@@ -7,9 +7,13 @@ import { RiArrowGoBackFill } from 'react-icons/ri'
 import { BsCameraVideoFill } from 'react-icons/bs'
 import { useLocation } from 'react-router-dom'
 import { GrAttachment } from 'react-icons/gr';
+import { AiOutlineClose } from 'react-icons/ai';
 import { IoIosSend } from 'react-icons/io'
 import {AuthContext} from '../../Contex/Auth'
 import Message from '../../Components/Message/Message'
+// import { io } from 'socket.io-client'
+
+// const socket = io('http://localhost:7000/')
 const avatarImg = require("../../images/avatar.png")
 
 
@@ -26,7 +30,11 @@ const IndividualChat = () => {
     const [image,setImage] = useState<any>('');
     const [messages,setMessages] =useState<any[]>([]);
     
-    
+    // useEffect(()=>{
+    //     socket.on("newMessage",(data)=>{
+    //         console.log(data)
+    //     })
+    // },[])
 
     useEffect(() => {
         const usersRef = collection(db,"users")
@@ -38,6 +46,7 @@ const IndividualChat = () => {
         })
         return ()=> onSub()
       },[])
+
 
       useEffect(() => {
         const messagesRef = collection(db,"messages", id, 'chat')
@@ -55,29 +64,37 @@ const IndividualChat = () => {
     const handleSend = async (e:any) =>{
         e.preventDefault();
         let urlPath;
+        // const data = {
+        //     sender:user1,
+        //     receiver:user2,
+        //     input,
+        //     image
+        // }
+        // socket.emit('SendMessage', data);
         if(image){
             const imgRef = ref(storage,`images/${new Date().getTime()}-${image.name}`);
             const snap = await uploadBytes(imgRef,image);
             const dbUrl = await getDownloadURL(ref(storage,snap.ref.fullPath));
             urlPath=dbUrl;
+
         }
-        await addDoc(collection(db, 'messages', id,'chat'),{
-            text:input,
-            from:user1,
-            to:user2,
-            createdAt: Timestamp.fromDate(new Date()),
-            media:urlPath || '',
-        })
-        await setDoc(doc(db, 'lastMessages', id),{
-            text:input,
-            from:user1,
-            to:user2,
-            createdAt: Timestamp.fromDate(new Date()),
-            media:urlPath || '',
-            unread:true,
-        })
-        setInput("");
-        setImage("");
+            await addDoc(collection(db, 'messages', id,'chat'),{
+                text:input,
+                from:user1,
+                to:user2,
+                createdAt: Timestamp.fromDate(new Date()),
+                media:urlPath || '',
+            })
+            await setDoc(doc(db, 'lastMessages', id),{
+                text:input,
+                from:user1,
+                to:user2,
+                createdAt: Timestamp.fromDate(new Date()),
+                media:urlPath || '',
+                unread:true,
+            })
+            setInput("");
+            setImage("");
     }
 
   return (
@@ -105,15 +122,21 @@ const IndividualChat = () => {
                 </div>
                 <h2 className='text-[12px] text-center text-gray-300 mb-4'>You matched on {userChat.createdAt?.toDate().toDateString()}</h2>
             </div>
-            <div>
+            <div className='mb-4'>
                 { messages.length? messages.map((message,index) => (
                     <Message key={index} message={message} user1={user1} />
                 )) : null } 
             </div>
         </div>
-        <div>
-            <form className='flex fixed bottom-0 w-full border-t border-gray-500' onSubmit={handleSend}>
-                <input required value={input} onChange={e => setInput(e.target.value)} type='text' placeholder='Type a message...' 
+        <div className='fixed bottom-0 w-full'>
+            {image ? <div className='flex items-center justify-between px-4 bg-gray-500'>
+                <p>{image.name}</p>
+                <div>
+                    <AiOutlineClose style={{color:'red'}} onClick={()=> setImage('')} />
+                </div>
+            </div> : null }
+            <form className='flex border-t border-gray-500' onSubmit={handleSend}>
+                <input value={input} onChange={e => setInput(e.target.value)} type='text' placeholder='Type a message...' 
                 className='flex-1 p-1 text-black'/>
                 <div className='text-pink-600 bg-white flex justify-center items-center px-2'>
                     <input type="file" accept='Image/*' style={{display:'none'}} id="file" onChange={(e:any)=>setImage(e.target.files[0])} />

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {BrowserRouter as Router,Route, Switch } from "react-router-dom";
+import { auth } from '../src/firebase/firebase'
 import AuthProvider from './Contex/Auth';
 import Home from './Pages/Home/Home';
 import Chats from "./Pages/Chats/Chats";
@@ -7,9 +8,7 @@ import IndividualChat from "./Pages/Individual_Chat/IndividualChat";
 import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
 import PrivateRoutes from './config/PrivateRoutes';
-import { io } from 'socket.io-client'
 
-const socket = io('http://localhost:7000/')
 
 
 const App:React.FunctionComponent<{}> = () => {
