@@ -119,24 +119,38 @@ const Home:React.FunctionComponent<Ipage> = () => {
     fetchCards()
   },[db])
 
+  
   return (
     <div>
       <Navbar />
-        <div className='flex justify-center my-4'>
-           {peoples.map((people, index:any)=>(
-             <TinderCard key={people.uid} 
-             ref={childRefs[index]} 
-             className='swipe absolute'
-             onSwipe={(dir:any) => swiped(dir, people.uid, index)}
-             onCardLeftScreen={() => outOfFrame(people.uid, index)}
-             preventSwipe={['up','down']}>
-               <div className='relative w-[600px] max-w-[80vw] h-[65vh] rounded-lg'>
-                <div style={{filter:'brightness(80%)',backgroundImage:`url(${people.avatar || avatarImg})`}} 
-               className='w-[600px] max-w-[80vw] h-[65vh] p-8 rounded-lg bg-center bg-cover shadow-2xl shadow-gray-500' />
-               <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[700]'>{people.names}</h2>
-               </div>
-             </TinderCard> 
-           ))}
+      {currentIndex === 0 ? (
+          <div className='flex flex-col items-center justify-center h-[65vh]'>
+              <p className='font-[800] text-2xl mb-4' >No more profiles</p>
+              <p className='text-center text-lg' >Please refresh the page to see if you didn't miss up your match</p>
+           </div>
+        ) : (<div className='flex justify-center my-4'>
+          {peoples.length ? (
+            <>
+           {peoples.map((people:any, index:any)=>(          
+            <TinderCard key={people.uid} 
+            ref={childRefs[index]} 
+            className='swipe absolute'
+            onSwipe={(dir:any) => swiped(dir, people.uid, index)}
+            onCardLeftScreen={() => outOfFrame(people.uid, index)}
+            preventSwipe={['up','down']}>
+              <div className='relative w-[600px] max-w-[80vw] h-[65vh] rounded-lg'>
+               <div style={{filter:'brightness(80%)',backgroundImage:`url(${people.avatar || avatarImg})`}} 
+              className='w-[600px] max-w-[80vw] h-[65vh] p-8 rounded-lg bg-center bg-cover shadow-2xl shadow-gray-500' />
+              <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[700]'>{people.names}</h2>
+              </div>
+            </TinderCard>
+          ))}
+          </>
+          ) : (
+            <div className='flex items-center justify-center h-[65vh]'>
+              <p className='font-[800] text-2xl' >No more profiles</p>
+            </div>
+          )}
              <div className='flex justify-evenly w-full absolute bottom-4 '>
                <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100
                 rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('Left')}>
@@ -151,7 +165,8 @@ const Home:React.FunctionComponent<Ipage> = () => {
                    <MdFavorite style={{fontSize:'2rem'}} />
                </div>
              </div>
-         </div>     
+         </div> 
+            )}    
     </div>
   )
 }

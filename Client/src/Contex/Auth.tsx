@@ -16,7 +16,7 @@ const AuthProvider = ({children}:any) =>{
     },[])
 
     if(loading) {
-        return (<div className="h-screen w-screen flex item-center justify-center">
+        return (<div className="flex h-[65vh] item-center justify-center">
                     <h2 className="text-2xl font-[800]">Loading ...</h2>
                 </div>)}
 
