@@ -123,7 +123,7 @@ const Home:React.FunctionComponent<Ipage> = () => {
   return (
     <div>
       <Navbar />
-      {currentIndex === 0 ? (
+      {currentIndex === -1 ? (
           <div className='flex flex-col items-center justify-center h-[65vh]'>
               <p className='font-[800] text-2xl mb-4' >No more profiles</p>
               <p className='text-center text-lg' >Please refresh the page to see if you didn't miss up your match</p>
@@ -148,7 +148,7 @@ const Home:React.FunctionComponent<Ipage> = () => {
           </>
           ) : (
             <div className='flex items-center justify-center h-[65vh]'>
-              <p className='font-[800] text-2xl' >No more profiles</p>
+              <p className='font-[800] text-2xl' >No profiles</p>
             </div>
           )}
              <div className='flex justify-evenly w-full absolute bottom-4 '>

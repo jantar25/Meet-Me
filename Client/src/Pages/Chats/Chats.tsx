@@ -23,16 +23,24 @@ const Chats:React.FunctionComponent<Ipage> = () => {
     return ()=> onSub()
   },[])
 
+
   return (
     <div>
       <Navbar BackButton="/" />
+      {peoples.length? (
       <div className='py-8'>
-        {peoples.map((people:any,index) =>(
-          <div key={index}>
-            <MachedUser people={people} currentUser={currentUser} />
-          </div>
-        ))}
-      </div>
+      {peoples.map((people:any,index) =>(
+        <div key={index}>
+          <MachedUser people={people} currentUser={currentUser} />
+        </div>
+      ))}
+    </div>
+      ) : (
+        <div className='flex flex-col items-center justify-center h-[65vh]'>
+        <p className='font-[600] text-lg mb-4' >No Matching Yet</p>
+     </div>
+      )}
+
     </div>
   )
 }

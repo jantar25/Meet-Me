@@ -2,6 +2,7 @@ import React,{ useState,useEffect,useRef } from 'react'
 import { signOut } from 'firebase/auth'
 import { updateDoc,doc,getDoc } from 'firebase/firestore'
 import { auth,db,storage } from '../../firebase/firebase'
+import { collection,query,where,onSnapshot,orderBy} from 'firebase/firestore'
 import { ref,getDownloadURL,uploadBytes,deleteObject } from 'firebase/storage' 
 import { Link,useHistory } from 'react-router-dom'
 import { SiGooglechat } from 'react-icons/si'
@@ -20,6 +21,9 @@ const Navbar = ({BackButton}:any) => {
   const [toggleProfile,setToggleProfile] = useState(false);
   const [img,setImg] = useState<any>("");
   const [user,setUser] = useState<any>("");
+  const [follows,setFollows] = useState<any>("");
+  const [followers,setFollowers] = useState<any>("");
+  const [matches,setMatches] = useState<any[]>([]);
   const history = useHistory();
   const menuRef = useRef<any>([]);
   const menu = () =>{setToggleProfile(!toggleProfile)} 
@@ -65,6 +69,37 @@ const Navbar = ({BackButton}:any) => {
     return ()=> document.removeEventListener('mousedown',handeler,{ capture: true })
   },[])
 
+  useEffect(() => {
+    const usersRef = collection(db,"matches")
+    // const followersRef = collection(db,"users",'swipes')
+    const qMatched = query(usersRef,where('usersMatched','array-contains',currentUser))
+    const messagesRef = collection(db,"users", currentUser, 'swipes')
+    const qfollow = query(messagesRef,orderBy('createdAt','asc'))
+    // const qfollower = query(followersRef,where('swipes','array-contains',currentUser))
+    // onSnapshot(followersRef,(snap:any) =>{
+    //     let flowrs:any= [];
+    //     snap.forEach((doc:any) => {
+    //       flowrs.push(doc.data())   
+    //   })
+    //   setFollowers(flowrs);
+    // }) 
+    onSnapshot(qfollow,(snap:any) =>{
+      let msgs:any= [];
+      snap.forEach((doc:any) => {
+      msgs.push(doc.data())   
+    })
+    setFollows(msgs);
+  }) 
+    const onSub = onSnapshot(qMatched,(snapshot:any) =>{
+      let peoples:any = []
+      snapshot.forEach((doc:any) => {
+      peoples.push(doc.data())
+    })
+    setMatches(peoples);
+    })
+    return ()=> onSub()
+  },[])
+
   const handleSignOut = async () =>{
       await updateDoc(doc(db,'users',currentUser),{
         isOnline:false,
@@ -73,6 +108,14 @@ const Navbar = ({BackButton}:any) => {
       history.push('/login')
   }
 
+
+  // delete matches.users[currentUser];
+  // const [userid,user]=Object.entries(matches.users).flat()
+  // const matchedUser={userid,user}
+  // const match:any=matchedUser.user
+  const matchIndex=matches.length
+  const followsIndex = follows.length
+console.log(followers)
   return (
     <div className='sticky top-0 z-50 bg-white text-pink-500'>
         <div className='flex justify-evenly text-2xl p-4 md:mx-16 lg:mx-24'>
@@ -124,7 +167,7 @@ const Navbar = ({BackButton}:any) => {
                       <Link className="cursor-pointer" to="Projects" onClick={menu}>
                           <div className=" flex flex-col my-1 bg-white rounded-lg items-center drop-shadow-lg">
                             <h3 className='text-md text-gray-500 font-[700]'>Matches</h3>
-                            <span className='text-pink-700 font-[700]'>469</span>
+                            <span className='text-pink-700 font-[700]'>{matchIndex}</span>
                           </div>
                         </Link>
                         <Link className="cursor-pointer" to="Projects" onClick={menu}>
@@ -136,7 +179,7 @@ const Navbar = ({BackButton}:any) => {
                         <Link className="cursor-pointer" to="Projects" onClick={menu}>
                           <div className=" flex flex-col my-1 bg-white rounded-lg items-center drop-shadow-lg">
                             <h3 className='text-md text-gray-500 font-[700]'>Follows</h3>
-                            <span className='text-pink-700 font-[700]'>469</span>
+                            <span className='text-pink-700 font-[700]'>{followsIndex}</span>
                           </div>
                         </Link>
                       <button className="text-xl mt-4 text-white p-2 rounded-lg font-[700] bg-pink-700 rounded-lg" 
