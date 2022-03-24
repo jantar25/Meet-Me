@@ -11,8 +11,8 @@ const Chats:React.FunctionComponent<Ipage> = () => {
   const currentUser:any=auth.currentUser?.uid
   
   useEffect(() => {
-    const usersRef = collection(db,"users")
-    const q = query(usersRef,where('uid','not-in',[currentUser]))
+    const usersRef = collection(db,"matches")
+    const q = query(usersRef,where('usersMatched','array-contains',currentUser))
     const onSub = onSnapshot(q,(snapshot:any) =>{
       let peoples:any = []
       snapshot.forEach((doc:any) => {
@@ -22,14 +22,13 @@ const Chats:React.FunctionComponent<Ipage> = () => {
     })
     return ()=> onSub()
   },[])
- 
 
   return (
     <div>
       <Navbar BackButton="/" />
       <div className='py-8'>
-        {peoples.map((people:any) =>(
-          <div key={people.uid}>
+        {peoples.map((people:any,index) =>(
+          <div key={index}>
             <MachedUser people={people} currentUser={currentUser} />
           </div>
         ))}

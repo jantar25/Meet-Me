@@ -9,9 +9,13 @@ const avatarImg = require("../../images/avatar.png")
 
 
 const MachedUser = ({people,currentUser}:any) => {
+    delete people.users[currentUser];
+    const [userid,user]=Object.entries(people.users).flat()
+    const matchedUser={userid,user}
+    const match:any=matchedUser.user
     const [data,setData] =useState<any>('');
     const user1=currentUser;
-    const user2=people.uid;
+    const user2=match.uid;
     const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`
     const theme:any = createTheme({
         palette: {
@@ -38,13 +42,13 @@ const MachedUser = ({people,currentUser}:any) => {
 
   return (
     <MuiThemeProvider theme={theme}>
-    <Link to={`/chats/${people.uid}`} onClick={handleRead}>
+    <Link to={`/chats/${match.uid}`} onClick={handleRead}>
     <div className='flex justify-between items-center p-4 h-[70px] border-b border-gray-100'>
         <div className='h-[48px] w-[48px]'>
-            <img src={people.avatar || avatarImg} alt={people.names} className='h-full w-full object-cover rounded-full ring-2 ring-gray-300'/>
+            <img src={match.avatar || avatarImg} alt={match.names} className='h-full w-full object-cover rounded-full ring-2 ring-gray-300'/>
         </div>
         <div className='flex-1 ml-4'>
-            <h1 className='font-[700] text-black mr-2'>{people.names}</h1>
+            <h1 className='font-[700] text-black mr-2'>{match.names}</h1>
             {data && (
                 <p className='text-gray-600 text-[12px] w-[160px] truncate'>
                     <strong>{data?.from === currentUser ? "Me: " : null}</strong>

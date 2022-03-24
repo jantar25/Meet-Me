@@ -62,9 +62,10 @@ const Home:React.FunctionComponent<Ipage> = () => {
 
     if(dir==='Left'){
       setDoc(doc(db,"users",user.uid,'passes',userSwiped.uid),userSwiped)
+      console.log("Dislike")
     } else {
       const loggedInProfile = await (await getDoc(doc(db, 'users', user.uid))).data();
-
+      console.log("Like")
       getDoc(doc(db, 'users', userSwiped.uid,'swipes', user.uid)).then((documentSnapshot)=>{
         if(documentSnapshot.exists()){
           const generatedId = (id1:any,id2:any) => (id1>id2 ? id1+id2 : id2+id1)
@@ -121,36 +122,36 @@ const Home:React.FunctionComponent<Ipage> = () => {
   return (
     <div>
       <Navbar />
-      <div className='flex justify-center my-4'>
-        {peoples.map((people, index:any)=>(
-          <TinderCard key={people.uid} 
-          ref={childRefs[index]} 
-          className='swipe absolute' 
-          onSwipe={(dir) => swiped(dir, people.uid, index)}
-          onCardLeftScreen={() => outOfFrame(people.uid, index)}
-          preventSwipe={['up','down']}>
-            <div className='relative w-[600px] max-w-[80vw] h-[65vh] rounded-lg'>
-            <div style={{filter:'brightness(80%)',backgroundImage:`url(${people.avatar || avatarImg})`}} 
-            className='w-[600px] max-w-[80vw] h-[65vh] p-8 rounded-lg bg-center bg-cover shadow-2xl shadow-gray-500' />
-            <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[700]'>{people.names}</h2>
-            </div>
-          </TinderCard>
-        ))}
-          <div className='flex justify-evenly w-full absolute bottom-4 '>
-          <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100
-             rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('Left')}>
-                <AiOutlineClose style={{fontSize:'2rem'}} />
-            </div>
-            <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
-            rounded-full shadow-xl shadow-gray-400 text-[#f5b748] cursor-pointer' onClick={() => goBack()}>
-                <MdReplay style={{fontSize:'2rem'}} />
-            </div>
-            <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
-            rounded-full shadow-xl shadow-gray-400 text-red-700 cursor-pointer' onClick={() => swipe('Right')}>
-                <MdFavorite style={{fontSize:'2rem'}} />
-            </div>
-          </div>
-      </div>
+        <div className='flex justify-center my-4'>
+           {peoples.map((people, index:any)=>(
+             <TinderCard key={people.uid} 
+             ref={childRefs[index]} 
+             className='swipe absolute'
+             onSwipe={(dir:any) => swiped(dir, people.uid, index)}
+             onCardLeftScreen={() => outOfFrame(people.uid, index)}
+             preventSwipe={['up','down']}>
+               <div className='relative w-[600px] max-w-[80vw] h-[65vh] rounded-lg'>
+                <div style={{filter:'brightness(80%)',backgroundImage:`url(${people.avatar || avatarImg})`}} 
+               className='w-[600px] max-w-[80vw] h-[65vh] p-8 rounded-lg bg-center bg-cover shadow-2xl shadow-gray-500' />
+               <h2 className='absolute bottom-4 left-4 text-2xl text-white font-[700]'>{people.names}</h2>
+               </div>
+             </TinderCard> 
+           ))}
+             <div className='flex justify-evenly w-full absolute bottom-4 '>
+               <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100
+                rounded-full shadow-xl shadow-gray-400 text-[#ec5e6f] cursor-pointer' onClick={() => swipe('Left')}>
+                   <AiOutlineClose style={{fontSize:'2rem'}} />
+               </div>
+               <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
+               rounded-full shadow-xl shadow-gray-400 text-[#f5b748] cursor-pointer' onClick={() => goBack()}>
+                   <MdReplay style={{fontSize:'2rem'}} />
+               </div>
+               <div className='flex justify-center items-center w-[3rem] h-[3rem] bg-gray-100 
+               rounded-full shadow-xl shadow-gray-400 text-red-700 cursor-pointer' onClick={() => swipe('Right')}>
+                   <MdFavorite style={{fontSize:'2rem'}} />
+               </div>
+             </div>
+         </div>     
     </div>
   )
 }
